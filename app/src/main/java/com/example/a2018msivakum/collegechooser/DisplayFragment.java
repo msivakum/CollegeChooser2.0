@@ -29,6 +29,8 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
 
     private ArrayList<College> collegeList, updateList;
 
+    public String DATA_RECEIVE = "";
+
     public DisplayFragment() { }
 
     public static DisplayFragment newInstance() {
@@ -61,6 +63,9 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
 
         collegeList = new ArrayList<>();
         updateList = new ArrayList<>();
+
+        Bundle args = getArguments();
+
         /*viewList = new ArrayList<>();
         idList = new ArrayList<>();
         inPriceList = new ArrayList<>();
@@ -80,7 +85,7 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         rankList = new ArrayList<>();*/
 
         readData();
-        sortRank(MainActivity.getSurveyData());
+        sortRank(Integer.parseInt(args.getString(DATA_RECEIVE)));
         //sortTotAdmitRate(15);
         //sortEnrollment(2000);
 

@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
     private DisplayFragment displayFrag;
     private Fragment mActiveFragment;
 
-    public static String mArg;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,7 +169,10 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
     }
 
     @Override
-    public String getSurveyData(){
-        return surveyFrag.getData();
+    public void passData(String data){
+        Bundle args = new Bundle();
+        args.putString(displayFrag.DATA_RECEIVE, data);
+        displayFrag.setArguments(args);
+        //getFragmentManager().beginTransaction().replace(R.id.container, displayFrag).commit();
     }
 }

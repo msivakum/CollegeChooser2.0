@@ -72,6 +72,6 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
 
     public interface SurveyFragmentInterface {
         void setSurveyFragmentActive();
-        String getSurveyData();
+        void passData(String data);
     }
 }
