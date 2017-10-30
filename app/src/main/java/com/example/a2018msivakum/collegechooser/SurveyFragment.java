@@ -68,6 +68,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         argString = mEditText.getText().toString();
+        mCallback.passData(argString);
     }
 
     public interface SurveyFragmentInterface {

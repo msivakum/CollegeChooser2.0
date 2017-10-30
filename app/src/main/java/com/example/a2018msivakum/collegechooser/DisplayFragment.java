@@ -29,7 +29,8 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
 
     private ArrayList<College> collegeList, updateList;
 
-    public String DATA_RECEIVE = "";
+    public String DATA_RECEIVE = "store";
+    private String argString;
 
     public DisplayFragment() { }
 
@@ -64,47 +65,45 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         collegeList = new ArrayList<>();
         updateList = new ArrayList<>();
 
-        Bundle args = getArguments();
-
-        /*viewList = new ArrayList<>();
-        idList = new ArrayList<>();
-        inPriceList = new ArrayList<>();
-        outPriceList = new ArrayList<>();
-        totAdmitList = new ArrayList<>();
-        menAdmitList = new ArrayList<>();
-        womenAdmitList = new ArrayList<>();
-        enrollList = new ArrayList<>();
-        satMath25List = new ArrayList<>();
-        satRead25List = new ArrayList<>();
-        satWrit25List = new ArrayList<>();
-        satMath75List = new ArrayList<>();
-        satRead75List = new ArrayList<>();
-        satWrit75List = new ArrayList<>();
-        act25List = new ArrayList<>();
-        act75List = new ArrayList<>();
-        rankList = new ArrayList<>();*/
-
         readData();
-        sortRank(Integer.parseInt(args.getString(DATA_RECEIVE)));
+        //sortRank(Integer.parseInt(args.getString(DATA_RECEIVE)));
+
         //sortTotAdmitRate(15);
         //sortEnrollment(2000);
 
         RecyclerView rvColleges = (RecyclerView) mRootView.findViewById(R.id.collegerv);
-
         CollegeAdapter adapter = new CollegeAdapter((Context) mCallback, updateList);
-        // Attach the adapter to the recyclerview to populate items
         rvColleges.setAdapter(adapter);
-        // Set layout manager to position the items
         LinearLayoutManager layoutManager = new LinearLayoutManager((Context) mCallback, LinearLayoutManager.VERTICAL, false);
-        // Optionally customize the position you want to default scroll to
         layoutManager.scrollToPosition(0);
-        // Attach layout manager to the RecyclerView
         rvColleges.setLayoutManager(layoutManager);
-
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
 
+        //sortRank(Integer.parseInt(argString));
+
         return mRootView;
+    }
+
+    /*@Override
+    public void onStart() {
+        super.onStart();
+        Bundle args = getArguments();
+        if (args != null) {
+            Log.i("DISPLAYFRAG", "args is not null");
+            argString = args.getString(DATA_RECEIVE);
+            sortRank(Integer.parseInt(argString));
+        }
+    }*/
+
+    public void getData() {
+        Bundle args = getArguments();
+        if (args != null) {
+            Log.i("DISPLAYFRAG", "args is not null");
+            argString = args.getString(DATA_RECEIVE);
+            Log.i("DISPLAYFRAG", "argString: " + argString);
+            sortRank(Integer.parseInt(argString));
+        }
     }
 
     @Override
