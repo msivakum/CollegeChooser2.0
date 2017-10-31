@@ -170,11 +170,11 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
     }
 
     @Override
-    public void passData(String data){
+    public void passData(String data, String data2){
         Log.i("MAINACTIVITY", "passData is called");
-        Bundle args = new Bundle();
+        /*Bundle args = new Bundle();
         args.putString(displayFrag.DATA_RECEIVE, data);
-        displayFrag.setArguments(args);
-        displayFrag.getData();
+        displayFrag.setArguments(args);*/
+        displayFrag.getData(data, data2);
     }
 }

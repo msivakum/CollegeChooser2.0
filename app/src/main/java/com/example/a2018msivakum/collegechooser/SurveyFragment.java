@@ -19,7 +19,8 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     private View mRootView;
     private SurveyFragmentInterface mCallback;
     private Button mButton;
-    private EditText mEditText;
+    private EditText mEditTextRank;
+    private EditText mEditTextTotAdmit;
 
     public static String argString;
 
@@ -31,8 +32,12 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
         return fragment1;
     }
 
-    public String getData(){
-        return mEditText.getText().toString();
+    public String getRankData(){
+        return mEditTextRank.getText().toString();
+    }
+
+    public String getTotAdmitData(){
+        return mEditTextTotAdmit.getText().toString();
     }
 
     @Override
@@ -56,7 +61,8 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.surveylayout, container, false);
-        mEditText = (EditText) mRootView.findViewById(R.id.edittext1);
+        mEditTextRank = (EditText) mRootView.findViewById(R.id.edittext1);
+        mEditTextTotAdmit = (EditText) mRootView.findViewById(R.id.edittext2);
 
         mButton = (Button) mRootView.findViewById(R.id.button1);
         mButton.setOnClickListener(this);
@@ -67,12 +73,11 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        argString = mEditText.getText().toString();
-        mCallback.passData(argString);
+        mCallback.passData(getRankData(), getTotAdmitData());
     }
 
     public interface SurveyFragmentInterface {
         void setSurveyFragmentActive();
-        void passData(String data);
+        void passData(String data, String data2);
     }
 }

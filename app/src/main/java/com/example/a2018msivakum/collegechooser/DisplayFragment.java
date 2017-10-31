@@ -3,6 +3,7 @@ package com.example.a2018msivakum.collegechooser;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by 2018msivakum on 10/26/2017.
@@ -24,10 +26,12 @@ import java.util.ArrayList;
 
 public class DisplayFragment extends Fragment implements View.OnClickListener{
 
+    private String TAG = "DISPLAYFRAG";
+
     private View mRootView;
     private DisplayFragment.DisplayFragmentInterface mCallback;
 
-    private ArrayList<College> collegeList, updateList;
+    private ArrayList<College> collegeList, updateList, tempList;
 
     public String DATA_RECEIVE = "store";
     private String argString;
@@ -64,6 +68,7 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
 
         collegeList = new ArrayList<>();
         updateList = new ArrayList<>();
+        tempList = new ArrayList<>();
 
         readData();
         //sortRank(Integer.parseInt(args.getString(DATA_RECEIVE)));
@@ -96,14 +101,15 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         }
     }*/
 
-    public void getData() {
-        Bundle args = getArguments();
+    public void getData(String s, String s2) {
+        /*Bundle args = getArguments();
         if (args != null) {
-            Log.i("DISPLAYFRAG", "args is not null");
-            argString = args.getString(DATA_RECEIVE);
-            Log.i("DISPLAYFRAG", "argString: " + argString);
-            sortRank(Integer.parseInt(argString));
-        }
+            Log.i(TAG, "args is not null");
+            argString = args.getString(DATA_RECEIVE);*/
+        Log.i(TAG, "editText numbers are: " + s + " and " + s2);
+        sortRank(Integer.parseInt(s));
+        sortTotAdmitRate(Integer.parseInt(s2));
+        //}
     }
 
     @Override
@@ -143,39 +149,41 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
                 //Log.i("MainActivity", "Just Created " + colleges.getId());
             }
         } catch (IOException err) {
-            Log.e("MainActivity", "Error" + line, err);
+            Log.e(TAG, "Error" + line, err);
             err.printStackTrace();
         }
 
-        updateList = collegeList;
-        Log.i("MainActivity", "Number of Colleges " + collegeList.size());
+        tempList = collegeList;
+        Log.i(TAG, "Number of Colleges " + collegeList.size());
     }
 
     public void sortRank(int a){
-        for(int k = updateList.size()-1; k >= 0; k--) {
-            if(Integer.parseInt(updateList.get(k).getRank()) > a || Integer.parseInt(updateList.get(k).getRank()) < 0) {
-                updateList.remove(updateList.get(k));
-                //Log.i("MainActivity", "Rank is " + updateList.get(k).getRank());
+        for(int k = 0; k < tempList.size(); k++){
+            if(Integer.parseInt(tempList.get(k).getRank()) < a && Integer.parseInt(tempList.get(k).getRank()) != -1){
+                updateList.add(tempList.get(k));
             }
         }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
     }
 
-    public void sortTotAdmitRate(int a){
-        for(int k = updateList.size()-1; k >= 0; k--) {
-            if(Integer.parseInt(updateList.get(k).getAdmitTot()) > a || Integer.parseInt(updateList.get(k).getAdmitTot()) < 0) {
-                updateList.remove(updateList.get(k));
-                //Log.i("MainActivity", "Total admit rate is " + updateList.get(k).getAdmitTot());
+    public void sortTotAdmitRate(int a) {
+        for(int k = tempList.size()-1; k >= 0; k--) {
+            if(Integer.parseInt(tempList.get(k).getAdmitTot()) > a || Integer.parseInt(tempList.get(k).getAdmitTot()) == -1){
+                updateList.remove(tempList.get(k));
             }
         }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
     }
 
     public void sortEnrollment(int a){
-        for(int k = updateList.size()-1; k >= 0; k--) {
-            if(Integer.parseInt(updateList.get(k).getEnrolled()) > a || Integer.parseInt(updateList.get(k).getEnrolled()) < 0) {
-                updateList.remove(updateList.get(k));
-                //Log.i("MainActivity", "Enrollment size is " + updateList.get(k).getEnrolled());
+        for(int k = tempList.size()-1; k >= 0; k--) {
+            if(Integer.parseInt(tempList.get(k).getEnrolled()) > a || Integer.parseInt(tempList.get(k).getEnrolled()) == -1){
+                updateList.remove(tempList.get(k));
             }
         }
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
     }
 
     public interface DisplayFragmentInterface {
