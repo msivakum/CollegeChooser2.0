@@ -34,10 +34,6 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
         mContext = context;
     }
 
-    private Context getContext() {
-        return mContext;
-    }
-
     @Override
     public CollegeAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();

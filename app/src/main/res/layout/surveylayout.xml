@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/edittext1"
         android:layout_centerHorizontal="true"
-        android:hint="Rank"/>
+        android:hint="Rank" />
 
     <EditText
         android:layout_width="100dp"
@@ -15,7 +15,7 @@
         android:id="@+id/edittext2"
         android:layout_below="@+id/edittext1"
         android:layout_centerHorizontal="true"
-        android:hint="Admit Rate"/>
+        android:hint="Admit Rate" />
 
     <Button
         android:layout_width="wrap_content"

@@ -2,6 +2,7 @@ package com.example.a2018msivakum.collegechooser;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -20,25 +21,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements SurveyFragment.SurveyFragmentInterface, DisplayFragment.DisplayFragmentInterface{
+//https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
 
     private SurveyFragment surveyFrag;
     private DisplayFragment displayFrag;
     private Fragment mActiveFragment;
+    private String TAG = "MAINACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +46,10 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -170,11 +159,8 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
     }
 
     @Override
-    public void passData(String data, String data2){
-        Log.i("MAINACTIVITY", "passData is called");
-        /*Bundle args = new Bundle();
-        args.putString(displayFrag.DATA_RECEIVE, data);
-        displayFrag.setArguments(args);*/
-        displayFrag.getData(data, data2);
+    public void passData(College col){
+        Log.i(TAG, "passData is called");
+        displayFrag.getData(col);
     }
 }

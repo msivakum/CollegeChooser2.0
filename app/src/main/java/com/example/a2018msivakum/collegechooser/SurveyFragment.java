@@ -3,6 +3,7 @@ package com.example.a2018msivakum.collegechooser;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +22,9 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     private Button mButton;
     private EditText mEditTextRank;
     private EditText mEditTextTotAdmit;
+    private College col;
 
-    public static String argString;
+    private String TAG = "SURVEYFRAG";
 
     public SurveyFragment() { }
 
@@ -35,10 +37,17 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     public String getRankData(){
         return mEditTextRank.getText().toString();
     }
-
     public String getTotAdmitData(){
         return mEditTextTotAdmit.getText().toString();
     }
+    
+    public College getCollege(){
+        Log.i(TAG, "getCollege called");
+        col.setRank(mEditTextRank.getText().toString());
+        col.setAdmitTot(mEditTextTotAdmit.getText().toString());
+        return col;
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -67,17 +76,19 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
         mButton = (Button) mRootView.findViewById(R.id.button1);
         mButton.setOnClickListener(this);
 
-        return mRootView;
+        col = new College();
 
+        return mRootView;
     }
 
     @Override
     public void onClick(View view) {
-        mCallback.passData(getRankData(), getTotAdmitData());
+        Log.i(TAG, "onClick called");
+        mCallback.passData(getCollege());
     }
 
     public interface SurveyFragmentInterface {
         void setSurveyFragmentActive();
-        void passData(String data, String data2);
+        void passData(College col);
     }
 }

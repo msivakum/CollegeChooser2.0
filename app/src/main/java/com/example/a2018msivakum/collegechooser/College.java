@@ -7,6 +7,8 @@ package com.example.a2018msivakum.collegechooser;
 public class College {
     String id, name, inPrice, outPrice, admitTot, admitMen, admitWomen, enrolled, satRead25, satRead75, satMath25, satMath75, satWrit25, satWrit75, act25, act75, rank;
 
+    public College(){}
+
     public String getId() {
         return id;
     }

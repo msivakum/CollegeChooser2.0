@@ -30,11 +30,10 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
 
     private View mRootView;
     private DisplayFragment.DisplayFragmentInterface mCallback;
-
+    private CollegeAdapter mAdapter;
     private ArrayList<College> collegeList, updateList, tempList;
 
-    public String DATA_RECEIVE = "store";
-    private String argString;
+    private Integer mCount = 1;
 
     public DisplayFragment() { }
 
@@ -71,45 +70,33 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         tempList = new ArrayList<>();
 
         readData();
-        //sortRank(Integer.parseInt(args.getString(DATA_RECEIVE)));
-
-        //sortTotAdmitRate(15);
-        //sortEnrollment(2000);
 
         RecyclerView rvColleges = (RecyclerView) mRootView.findViewById(R.id.collegerv);
-        CollegeAdapter adapter = new CollegeAdapter((Context) mCallback, updateList);
-        rvColleges.setAdapter(adapter);
+        mAdapter = new CollegeAdapter((Context) mCallback, updateList);
+        rvColleges.setAdapter(mAdapter);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager((Context) mCallback, LinearLayoutManager.VERTICAL, false);
         layoutManager.scrollToPosition(0);
         rvColleges.setLayoutManager(layoutManager);
+
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
-
-        //sortRank(Integer.parseInt(argString));
 
         return mRootView;
     }
 
-    /*@Override
-    public void onStart() {
-        super.onStart();
-        Bundle args = getArguments();
-        if (args != null) {
-            Log.i("DISPLAYFRAG", "args is not null");
-            argString = args.getString(DATA_RECEIVE);
-            sortRank(Integer.parseInt(argString));
-        }
-    }*/
 
-    public void getData(String s, String s2) {
-        /*Bundle args = getArguments();
-        if (args != null) {
-            Log.i(TAG, "args is not null");
-            argString = args.getString(DATA_RECEIVE);*/
-        Log.i(TAG, "editText numbers are: " + s + " and " + s2);
-        sortRank(Integer.parseInt(s));
-        sortTotAdmitRate(Integer.parseInt(s2));
-        //}
+    public void getData(College col) {
+        Log.i(TAG, "editText numbers are: " + col.getRank() + " and " + col.getAdmitTot());
+        if(mCount > 0){
+            resetLists();
+            mCount--;
+        }
+        sortRank(Integer.parseInt(col.getRank()));
+        sortTotAdmitRate(Integer.parseInt(col.getAdmitTot()));
+        mAdapter.notifyDataSetChanged();
+        mCount++;
+        Log.i(TAG, "FINALupdateList has: " + updateList.size());
     }
 
     @Override
@@ -157,9 +144,16 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         Log.i(TAG, "Number of Colleges " + collegeList.size());
     }
 
+    public void resetLists(){
+        updateList = new ArrayList<>();
+        tempList = collegeList;
+        mAdapter.notifyDataSetChanged();
+    }
+
     public void sortRank(int a){
-        for(int k = 0; k < tempList.size(); k++){
-            if(Integer.parseInt(tempList.get(k).getRank()) < a && Integer.parseInt(tempList.get(k).getRank()) != -1){
+        Log.i(TAG, "sortRank is called");
+        for (int k = 0; k < tempList.size(); k++) {
+            if (Integer.parseInt(tempList.get(k).getRank()) < a && Integer.parseInt(tempList.get(k).getRank()) != -1) {
                 updateList.add(tempList.get(k));
             }
         }
@@ -168,8 +162,9 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
     }
 
     public void sortTotAdmitRate(int a) {
-        for(int k = tempList.size()-1; k >= 0; k--) {
-            if(Integer.parseInt(tempList.get(k).getAdmitTot()) > a || Integer.parseInt(tempList.get(k).getAdmitTot()) == -1){
+        Log.i(TAG, "sortAdmitRate is called");
+        for (int k = tempList.size() - 1; k >= 0; k--) {
+            if (Integer.parseInt(tempList.get(k).getAdmitTot()) > a || Integer.parseInt(tempList.get(k).getAdmitTot()) == -1) {
                 updateList.remove(tempList.get(k));
             }
         }
