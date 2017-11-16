@@ -29,9 +29,9 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
         }
     }
 
-    public CollegeAdapter(Context context, List<College> listcolleges) {
+    public CollegeAdapter(List<College> listcolleges) {
         mColleges = listcolleges;
-        mContext = context;
+        //mContext = context;
     }
 
     @Override

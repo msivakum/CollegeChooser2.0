@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by 2018msivakum on 10/26/2017.
@@ -29,6 +30,7 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
     private String TAG = "DISPLAYFRAG";
 
     private View mRootView;
+    private RecyclerView rvColleges;
     private DisplayFragment.DisplayFragmentInterface mCallback;
     private CollegeAdapter mAdapter;
     private ArrayList<College> collegeList, updateList, tempList;
@@ -71,9 +73,8 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
 
         readData();
 
-        RecyclerView rvColleges = (RecyclerView) mRootView.findViewById(R.id.collegerv);
-        mAdapter = new CollegeAdapter((Context) mCallback, updateList);
-        rvColleges.setAdapter(mAdapter);
+        rvColleges = (RecyclerView) mRootView.findViewById(R.id.collegerv);
+        rvColleges.setAdapter(new CollegeAdapter(updateList));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager((Context) mCallback, LinearLayoutManager.VERTICAL, false);
         layoutManager.scrollToPosition(0);
@@ -85,18 +86,16 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         return mRootView;
     }
 
-
     public void getData(College col) {
         Log.i(TAG, "editText numbers are: " + col.getRank() + " and " + col.getAdmitTot());
-        if(mCount > 0){
-            resetLists();
-            mCount--;
-        }
+
         sortRank(Integer.parseInt(col.getRank()));
         sortTotAdmitRate(Integer.parseInt(col.getAdmitTot()));
-        mAdapter.notifyDataSetChanged();
-        mCount++;
+        rvColleges.setAdapter(new CollegeAdapter(updateList));
+
         Log.i(TAG, "FINALupdateList has: " + updateList.size());
+
+        resetLists();
     }
 
     @Override
@@ -132,14 +131,11 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
                 colleges.setAct75(items[15]);
                 colleges.setRank(items[16]);
                 collegeList.add(colleges);
-
-                //Log.i("MainActivity", "Just Created " + colleges.getId());
             }
         } catch (IOException err) {
             Log.e(TAG, "Error" + line, err);
             err.printStackTrace();
         }
-
         tempList = collegeList;
         Log.i(TAG, "Number of Colleges " + collegeList.size());
     }
@@ -147,7 +143,6 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
     public void resetLists(){
         updateList = new ArrayList<>();
         tempList = collegeList;
-        mAdapter.notifyDataSetChanged();
     }
 
     public void sortRank(int a){
@@ -173,11 +168,13 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
     }
 
     public void sortEnrollment(int a){
+        Log.i(TAG, "sortEnrollment is called");
         for(int k = tempList.size()-1; k >= 0; k--) {
             if(Integer.parseInt(tempList.get(k).getEnrolled()) > a || Integer.parseInt(tempList.get(k).getEnrolled()) == -1){
                 updateList.remove(tempList.get(k));
             }
         }
+        tempList = updateList;
         Log.i(TAG, "NEWupdateList has: " + updateList.size());
     }
 
