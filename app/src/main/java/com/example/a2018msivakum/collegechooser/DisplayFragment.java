@@ -26,7 +26,7 @@ import java.util.List;
  * Created by 2018msivakum on 10/26/2017.
  */
 
-public class DisplayFragment extends Fragment implements View.OnClickListener{
+public class DisplayFragment extends Fragment{
 
     private String TAG = "DISPLAYFRAG";
 
@@ -84,17 +84,19 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
 
-        /*rvColleges.addOnItemTouchListener(new RecyclerTouchListener(MainActivity.getApplicationContext(), rvColleges, new RecyclerTouchListener.ClickListener() {
+        rvColleges.addOnItemTouchListener(new RecyclerTouchListener((Context) mCallback, rvColleges, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Toast.makeText(getApplicationContext(), getPosition() + ": " + mColleges.get(getPosition()).getName(), Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "onClick is called from DisplayFragment");
+                Log.i(TAG, "position: " + position);
+                Toast.makeText(view.getContext(), position + ": " + updateList.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
+            //SOMETHING WRONG WITH CONTEXT IN TOAST ABOVE!!
 
-            @Override
             public void onLongClick(View view, int position) {
 
             }
-        }));*/
+        }));
 
         return mRootView;
     }
@@ -109,11 +111,6 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         Log.i(TAG, "FINALupdateList has: " + updateList.size());
 
         resetLists();
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 
     public void readData() {
