@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements SurveyFragment.SurveyFragmentInterface, DisplayFragment.DisplayFragmentInterface{
 //https://www.androidhive.info/2016/01/android-working-with-recycler-view/
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+
     }
 
     @Override

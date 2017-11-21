@@ -18,26 +18,33 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
 
     private List<College> mColleges;
     private Context mContext;
+    private College mColInst;
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener*/{
 
         public TextView nameTextView;;
 
         public ViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
+            //view.setOnClickListener(this);
             nameTextView = (TextView) view.findViewById(R.id.collegename);
         }
 
-        @Override
+        /*@Override
         public void onClick(View view) {
-            Toast.makeText(view.getContext(), "position = " + getPosition(), Toast.LENGTH_SHORT).show();
-        }
+            Toast.makeText(view.getContext(), getPosition() + ": " + mColleges.get(getPosition()).getName(), Toast.LENGTH_SHORT).show();
+            mColInst = mColleges.get(getPosition());
+        }*/
     }
 
     public CollegeAdapter(List<College> listcolleges) {
         mColleges = listcolleges;
         //mContext = context;
+    }
+
+
+    public College getPositionCollege(){
+        return mColInst;
     }
 
     @Override

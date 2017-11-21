@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,7 +54,6 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         try {
             mCallback = (DisplayFragment.DisplayFragmentInterface) context;
             if (this.getUserVisibleHint()) {
-                // NOTIFY ACTIVITY THAT THIS IS THE ACTIVE FRAGMENT
                 mCallback.setDisplayFragmentActive();
             }
 
@@ -74,7 +74,8 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
         readData();
 
         rvColleges = (RecyclerView) mRootView.findViewById(R.id.collegerv);
-        rvColleges.setAdapter(new CollegeAdapter(updateList));
+        CollegeAdapter cAdapter = new CollegeAdapter((updateList));
+        rvColleges.setAdapter(cAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager((Context) mCallback, LinearLayoutManager.VERTICAL, false);
         layoutManager.scrollToPosition(0);
@@ -82,6 +83,18 @@ public class DisplayFragment extends Fragment implements View.OnClickListener{
 
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
+
+        /*rvColleges.addOnItemTouchListener(new RecyclerTouchListener(MainActivity.getApplicationContext(), rvColleges, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Toast.makeText(getApplicationContext(), getPosition() + ": " + mColleges.get(getPosition()).getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));*/
 
         return mRootView;
     }
