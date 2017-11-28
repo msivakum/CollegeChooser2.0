@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 
 /**
  * Created by 2018msivakum on 10/24/2017.
@@ -86,6 +89,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         Log.i(TAG, "onClick called");
         mCallback.passData(getCollege());
+        ((MainActivity) getActivity()).getVP().setCurrentItem(1, true); //switches to recyclerview fragment, but stops scrolling functionality
     }
 
     public interface SurveyFragmentInterface {

@@ -3,6 +3,8 @@ package com.example.a2018msivakum.collegechooser;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +36,7 @@ public class DisplayFragment extends Fragment{
     private RecyclerView rvColleges;
     private DisplayFragment.DisplayFragmentInterface mCallback;
     private CollegeAdapter mAdapter;
-    private ArrayList<College> collegeList, updateList, tempList;
+    private ArrayList<College> collegeList, updateList, tempList, clickList;
 
     private Integer mCount = 1;
 
@@ -84,17 +86,13 @@ public class DisplayFragment extends Fragment{
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
 
-        rvColleges.addOnItemTouchListener(new RecyclerTouchListener((Context) mCallback, rvColleges, new RecyclerTouchListener.ClickListener() {
+        rvColleges.addOnItemTouchListener(new RecyclerTouchListener((Context) mCallback, rvColleges, new RecyclerTouchListener.ClickListener(){
             @Override
-            public void onClick(View view, int position) {
+            public void myOnClick(View view, int position) {
                 Log.i(TAG, "onClick is called from DisplayFragment");
                 Log.i(TAG, "position: " + position);
-                Toast.makeText(view.getContext(), position + ": " + updateList.get(position).getName(), Toast.LENGTH_SHORT).show();
-            }
-            //SOMETHING WRONG WITH CONTEXT IN TOAST ABOVE!!
-
-            public void onLongClick(View view, int position) {
-
+                Log.i(TAG, "name: " + clickList.get(position).getName());
+                Toast.makeText((Context) mCallback, position + ": " + clickList.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         }));
 
@@ -109,6 +107,8 @@ public class DisplayFragment extends Fragment{
         rvColleges.setAdapter(new CollegeAdapter(updateList));
 
         Log.i(TAG, "FINALupdateList has: " + updateList.size());
+
+        clickList = updateList;
 
         resetLists();
     }
