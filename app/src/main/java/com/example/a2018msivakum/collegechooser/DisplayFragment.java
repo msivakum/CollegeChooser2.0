@@ -6,11 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -28,7 +30,7 @@ import java.util.List;
  * Created by 2018msivakum on 10/26/2017.
  */
 
-public class DisplayFragment extends Fragment{
+public class DisplayFragment extends Fragment implements RecyclerView.OnItemTouchListener{
 
     private String TAG = "DISPLAYFRAG";
 
@@ -37,6 +39,8 @@ public class DisplayFragment extends Fragment{
     private DisplayFragment.DisplayFragmentInterface mCallback;
     private CollegeAdapter mAdapter;
     private ArrayList<College> collegeList, updateList, tempList, clickList;
+
+    private College mCollege;
 
     private Integer mCount = 1;
 
@@ -78,6 +82,7 @@ public class DisplayFragment extends Fragment{
         rvColleges = (RecyclerView) mRootView.findViewById(R.id.collegerv);
         CollegeAdapter cAdapter = new CollegeAdapter((updateList));
         rvColleges.setAdapter(cAdapter);
+        rvColleges.addOnItemTouchListener(this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager((Context) mCallback, LinearLayoutManager.VERTICAL, false);
         layoutManager.scrollToPosition(0);
@@ -86,7 +91,7 @@ public class DisplayFragment extends Fragment{
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
 
-        rvColleges.addOnItemTouchListener(new RecyclerTouchListener((Context) mCallback, rvColleges, new RecyclerTouchListener.ClickListener(){
+        /*rvColleges.addOnItemTouchListener(new RecyclerTouchListener((Context) mCallback, rvColleges, new RecyclerTouchListener.ClickListener(){
             @Override
             public void myOnClick(View view, int position) {
                 Log.i(TAG, "onClick is called from DisplayFragment");
@@ -94,9 +99,35 @@ public class DisplayFragment extends Fragment{
                 Log.i(TAG, "name: " + clickList.get(position).getName());
                 Toast.makeText((Context) mCallback, position + ": " + clickList.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
-        }));
+        }));*/
 
         return mRootView;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+        View child = rv.findChildViewUnder(e.getX(), e.getY());
+        int position = rv.getChildPosition(child);
+        if(position != -1) {
+            myOnClick(child, position);
+        }
+        return true;
+    }
+
+    public void myOnClick(View view, int pos){
+        //Toast.makeText((Context) mCallback, pos + ": " + clickList.get(pos).getName(), Toast.LENGTH_SHORT).show();
+        mCallback.switchToThirdFrag();
+        mCallback.setCol(clickList.get(pos));
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
     }
 
     public void getData(College col) {
@@ -190,5 +221,8 @@ public class DisplayFragment extends Fragment{
 
     public interface DisplayFragmentInterface {
         void setDisplayFragmentActive();
+        ViewPager getVP();
+        void switchToThirdFrag();
+        void setCol(College c);
     }
 }

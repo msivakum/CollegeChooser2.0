@@ -89,11 +89,12 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         Log.i(TAG, "onClick called");
         mCallback.passData(getCollege());
-        ((MainActivity) getActivity()).getVP().setCurrentItem(1, true); //switches to recyclerview fragment, but stops scrolling functionality
+        mCallback.switchToSecondFrag();
     }
 
     public interface SurveyFragmentInterface {
         void setSurveyFragmentActive();
         void passData(College col);
+        void switchToSecondFrag();
     }
 }

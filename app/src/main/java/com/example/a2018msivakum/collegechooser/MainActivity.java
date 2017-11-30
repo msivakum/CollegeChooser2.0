@@ -18,20 +18,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements SurveyFragment.SurveyFragmentInterface, DisplayFragment.DisplayFragmentInterface{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, SurveyFragment.SurveyFragmentInterface, DisplayFragment.DisplayFragmentInterface, CollegeItemFragment.CollegeItemInterface{
 //https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
-    private FrameLayout mFrameLayout;
+    private Button mButton;
 
     private SurveyFragment surveyFrag;
     private DisplayFragment displayFrag;
+    private CollegeItemFragment citemFrag;
+
+    private College mCollege;
+    private int mInd;
 
     private Fragment mActiveFragment;
     private String TAG = "MAINACTIVITY";
@@ -50,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        mButton = (Button) findViewById(R.id.backbutton);
+        mButton.setOnClickListener(this);
     }
 
     @Override
@@ -71,6 +79,18 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.backbutton){
+            if(mInd == 1)
+                mViewPager.setCurrentItem(0, true);
+            if(mInd == 2) {
+                mViewPager.setCurrentItem(1, true);
+                mInd = 1;
+            }
+        }
     }
 
     /**
@@ -127,6 +147,9 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
                 case 1 :
                     displayFrag = DisplayFragment.newInstance();;
                     return displayFrag;
+                case 2 :
+                    citemFrag = CollegeItemFragment.newInstance();
+                    return citemFrag;
                 default :
                     return null;
             }
@@ -135,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -145,19 +168,31 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
                     return "SECTION 1";
                 case 1:
                     return "SECTION 2";
+                case 2:
+                    return "SECTION 3";
             }
             return null;
         }
     }
 
+
+
     @Override
     public void setSurveyFragmentActive() {
         mActiveFragment = surveyFrag;
+        mInd = 0;
     }
 
     @Override
     public void setDisplayFragmentActive() {
         mActiveFragment = displayFrag;
+        mInd = 1;
+    }
+
+    @Override
+    public void setCollegeItemFragmentActive() {
+        mActiveFragment = citemFrag;
+        mInd = 2;
     }
 
     @Override
@@ -166,6 +201,25 @@ public class MainActivity extends AppCompatActivity implements SurveyFragment.Su
         displayFrag.getData(col);
     }
 
+    @Override
+    public void switchToSecondFrag(){
+        mViewPager.setCurrentItem(1, true);
+        mInd = 1;
+    }
+
+    @Override
+    public void switchToThirdFrag(){
+        mViewPager.setCurrentItem(2, true);
+        mInd = 2;
+    }
+
+    @Override
+    public void setCol(College c){
+        mCollege = c;
+        citemFrag.receiveCol(mCollege);
+    }
+
+    @Override
     public ViewPager getVP(){
         return mViewPager;
     }
