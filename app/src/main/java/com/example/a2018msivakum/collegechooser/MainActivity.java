@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,10 +24,19 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, SurveyFragment.SurveyFragmentInterface, DisplayFragment.DisplayFragmentInterface, CollegeItemFragment.CollegeItemInterface{
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, SurveyFragment.SurveyFragmentInterface, DisplayFragment.DisplayFragmentInterface, CollegeItemFragment.CollegeItemInterface, CollegeAdapter.CAInterface{
 //https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    private ArrayList<College> collegeList, updateList, tempList;
 
     private ViewPager mViewPager;
     private Button mButton;
@@ -56,8 +66,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mButton = (Button) findViewById(R.id.backbutton);
-        mButton.setOnClickListener(this);
+        mViewPager.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event){
+                return true;
+            }
+        });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.backbutton);
+        fab.setOnClickListener(this);
+
+        collegeList = new ArrayList<>();
+        tempList = new ArrayList<>();
+        updateList = new ArrayList<>();
+
+        readData();
     }
 
     @Override
@@ -84,13 +108,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.backbutton){
-            if(mInd == 1)
+            if(mInd == 1) {
                 mViewPager.setCurrentItem(0, true);
+                resetLists();
+            }
             if(mInd == 2) {
                 mViewPager.setCurrentItem(1, true);
                 mInd = 1;
             }
         }
+    }
+
+    public void readData() {
+        InputStream is = getResources().openRawResource(R.raw.collegedata);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        String line = "";
+        try {
+            while ((line = reader.readLine()) != null) {
+
+                String[] items = line.split(",");
+
+                College colleges = new College();
+                colleges.setId(items[0]);
+                colleges.setName(items[1]);
+                colleges.setInPrice(items[2]);
+                colleges.setOutPrice(items[3]);
+                colleges.setAdmitTot(items[4]);
+                colleges.setAdmitMen(items[5]);
+                colleges.setAdmitWomen(items[6]);
+                colleges.setEnrolled(items[7]);
+                colleges.setSatRead25(items[8]);
+                colleges.setSatRead75(items[9]);
+                colleges.setSatMath25(items[10]);
+                colleges.setSatMath75(items[11]);
+                colleges.setSatWrit25(items[12]);
+                colleges.setSatWrit75(items[13]);
+                colleges.setAct25(items[14]);
+                colleges.setAct75(items[15]);
+                colleges.setRank(items[16]);
+                collegeList.add(colleges);
+            }
+        } catch (IOException err) {
+            Log.e(TAG, "Error" + line, err);
+            err.printStackTrace();
+        }
+        tempList = collegeList;
+        Log.i(TAG, "Number of Colleges " + collegeList.size());
+    }
+
+    @Override
+    public void switchToThirdFrag(int i) {
+        mViewPager.setCurrentItem(2, true);
+        citemFrag.receiveCol(updateList.get(i));
+        mInd = 2;
     }
 
     /**
@@ -198,7 +268,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void passData(College col){
         Log.i(TAG, "passData is called");
-        displayFrag.getData(col);
+
+        Log.i(TAG, "editText numbers are: " + col.getRank() + " and " + col.getAdmitTot());
+
+        sortRank(Integer.parseInt(col.getRank()));
+        sortTotAdmitRate(Integer.parseInt(col.getAdmitTot()));
+
+        displayFrag.getRV().setAdapter(new CollegeAdapter(updateList));
+
+        Log.i(TAG, "FINALupdateList has: " + updateList.size());
+        //displayFrag.getData(col);
+    }
+
+    public void resetLists(){
+        updateList = new ArrayList<>();
+        tempList = collegeList;
+    }
+
+    public void sortRank(int a){
+        Log.i(TAG, "sortRank is called");
+        for (int k = 0; k < tempList.size(); k++) {
+            if (Integer.parseInt(tempList.get(k).getRank()) < a && Integer.parseInt(tempList.get(k).getRank()) != -1) {
+                updateList.add(tempList.get(k));
+            }
+        }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
+    }
+
+    public void sortTotAdmitRate(int a) {
+        Log.i(TAG, "sortAdmitRate is called");
+        for (int k = tempList.size() - 1; k >= 0; k--) {
+            if (Integer.parseInt(tempList.get(k).getAdmitTot()) > a || Integer.parseInt(tempList.get(k).getAdmitTot()) == -1) {
+                updateList.remove(tempList.get(k));
+            }
+        }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
+    }
+
+    public void sortEnrollment(int a){
+        Log.i(TAG, "sortEnrollment is called");
+        for(int k = tempList.size()-1; k >= 0; k--) {
+            if(Integer.parseInt(tempList.get(k).getEnrolled()) > a || Integer.parseInt(tempList.get(k).getEnrolled()) == -1){
+                updateList.remove(tempList.get(k));
+            }
+        }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
     }
 
     @Override
@@ -207,11 +324,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mInd = 1;
     }
 
-    @Override
+    /*@Override
     public void switchToThirdFrag(){
         mViewPager.setCurrentItem(2, true);
         mInd = 2;
-    }
+    }*/
 
     @Override
     public void setCol(College c){

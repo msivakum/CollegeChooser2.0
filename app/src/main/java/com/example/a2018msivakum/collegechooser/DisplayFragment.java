@@ -30,7 +30,8 @@ import java.util.List;
  * Created by 2018msivakum on 10/26/2017.
  */
 
-public class DisplayFragment extends Fragment implements RecyclerView.OnItemTouchListener{
+//public class DisplayFragment extends Fragment implements RecyclerView.OnItemTouchListener{
+public class DisplayFragment extends Fragment {
 
     private String TAG = "DISPLAYFRAG";
 
@@ -77,12 +78,11 @@ public class DisplayFragment extends Fragment implements RecyclerView.OnItemTouc
         updateList = new ArrayList<>();
         tempList = new ArrayList<>();
 
-        readData();
+        //readData();
 
         rvColleges = (RecyclerView) mRootView.findViewById(R.id.collegerv);
-        CollegeAdapter cAdapter = new CollegeAdapter((updateList));
-        rvColleges.setAdapter(cAdapter);
-        rvColleges.addOnItemTouchListener(this);
+        rvColleges.setAdapter(new CollegeAdapter(updateList));
+//        rvColleges.addOnItemTouchListener(this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager((Context) mCallback, LinearLayoutManager.VERTICAL, false);
         layoutManager.scrollToPosition(0);
@@ -91,43 +91,37 @@ public class DisplayFragment extends Fragment implements RecyclerView.OnItemTouc
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
 
-        /*rvColleges.addOnItemTouchListener(new RecyclerTouchListener((Context) mCallback, rvColleges, new RecyclerTouchListener.ClickListener(){
-            @Override
-            public void myOnClick(View view, int position) {
-                Log.i(TAG, "onClick is called from DisplayFragment");
-                Log.i(TAG, "position: " + position);
-                Log.i(TAG, "name: " + clickList.get(position).getName());
-                Toast.makeText((Context) mCallback, position + ": " + clickList.get(position).getName(), Toast.LENGTH_SHORT).show();
-            }
-        }));*/
-
         return mRootView;
     }
 
-    @Override
+//    @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
         View child = rv.findChildViewUnder(e.getX(), e.getY());
         int position = rv.getChildPosition(child);
         if(position != -1) {
-            myOnClick(child, position);
+//            myOnClick(child, position);
         }
-        return true;
+        return false;
     }
 
     public void myOnClick(View view, int pos){
         //Toast.makeText((Context) mCallback, pos + ": " + clickList.get(pos).getName(), Toast.LENGTH_SHORT).show();
-        mCallback.switchToThirdFrag();
+        //mCallback.switchToThirdFrag();
         mCallback.setCol(clickList.get(pos));
     }
 
-    @Override
+//    @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
     }
 
-    @Override
+//    @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
+    }
+
+    public RecyclerView getRV() {
+        return rvColleges;
     }
 
     public void getData(College col) {
@@ -222,7 +216,7 @@ public class DisplayFragment extends Fragment implements RecyclerView.OnItemTouc
     public interface DisplayFragmentInterface {
         void setDisplayFragmentActive();
         ViewPager getVP();
-        void switchToThirdFrag();
+        //void switchToThirdFrag();
         void setCol(College c);
     }
 }
