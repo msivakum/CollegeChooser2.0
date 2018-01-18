@@ -29,4 +29,12 @@
         android:layout_below="@+id/rankstats"
         android:layout_centerHorizontal="true"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/enrollstats"
+        android:layout_below="@+id/totadmitstats"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

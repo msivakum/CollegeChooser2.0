@@ -30,13 +30,13 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
     private Button mButton;
     private EditText mEditTextRank;
     private EditText mEditTextTotAdmit;
-    private Spinner mSpinnerRank, mSpinnerTotRate;
+    private Spinner mSpinnerRank, mSpinnerTotRate, mSpinnerEnroll;
     private College col;
     private Integer mInt;
 
     private Integer[] mArray;
 
-    private String[] ranks, totrates;
+    private String[] ranks, totrates, enrolls;
 
     private String TAG = "SURVEYFRAG";
 
@@ -51,6 +51,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         Log.i(TAG, "getCollege called");
         col.setRank(a[0].toString());
         col.setAdmitTot(a[1].toString());
+        col.setEnrolled(a[2].toString());
         return col;
     }
 
@@ -79,19 +80,28 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
         mArray = new Integer[15];
 
+        //----------------------------------------------------
         mSpinnerRank = (Spinner) mRootView.findViewById(R.id.rankmenu);
         mSpinnerRank.setOnItemSelectedListener(this);
 
         ranks = new String[]{"10", "20", "30", "40", "50", "-1"};
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>((Context) mCallback, android.R.layout.simple_spinner_dropdown_item, ranks);
         mSpinnerRank.setAdapter(adapter1);
-
+        //----------------------------------------------------
         mSpinnerTotRate = (Spinner) mRootView.findViewById(R.id.totratemenu);
         mSpinnerTotRate.setOnItemSelectedListener(this);
 
         totrates = new String[]{"5", "10", "15", "20", "25", "30", "40", "50", "100", "-1"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>((Context) mCallback, android.R.layout.simple_spinner_dropdown_item, totrates);
         mSpinnerTotRate.setAdapter(adapter2);
+        //----------------------------------------------------
+        mSpinnerEnroll = (Spinner) mRootView.findViewById(R.id.enrollmenu);
+        mSpinnerEnroll.setOnItemSelectedListener(this);
+
+        enrolls = new String[]{"1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000", "9000", "10000", "-1"};
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>((Context) mCallback, android.R.layout.simple_spinner_dropdown_item, enrolls);
+        mSpinnerEnroll.setAdapter(adapter3);
+        //----------------------------------------------------
 
         mButton = (Button) mRootView.findViewById(R.id.button1);
         mButton.setOnClickListener(this);
@@ -119,6 +129,10 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
             case R.id.totratemenu:
                 mArray[1] = Integer.parseInt(totrates[i]);
                 Log.i(TAG, "tot rate selected = " + totrates[i]);
+                break;
+            case R.id.enrollmenu:
+                mArray[2] = Integer.parseInt(enrolls[i]);
+                Log.i(TAG, "enrollment selected = " + enrolls[i]);
                 break;
             default:
                 break;

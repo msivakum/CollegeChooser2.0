@@ -6,6 +6,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:id="@+id/titletext"
         android:text="SURVEY"
         android:textSize="25dp"
@@ -22,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ranked ___ or below:"
+            android:text="Ranked ___ or below (CS undergraduate program):"
             android:textColor="@color/black"
             android:textSize="15dp" />
 
@@ -35,7 +36,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="With a total admission rate ___ or lower:"
+            android:text="With a total admission rate of ___ or lower:"
             android:textColor="@color/black"
             android:textSize="15dp" />
 
@@ -45,12 +46,25 @@
             android:id="@+id/totratemenu"
             android:spinnerMode="dropdown" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="With size of ___ students (per year) or smaller:"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:id="@+id/enrollmenu"
+            android:spinnerMode="dropdown" />
+
     </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="535dp"
+        android:layout_marginTop="539dp"
         android:background="@color/green"
         android:textSize="17dp"
         android:id="@+id/button1"
