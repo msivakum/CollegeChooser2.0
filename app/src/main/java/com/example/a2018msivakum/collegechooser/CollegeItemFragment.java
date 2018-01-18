@@ -28,7 +28,9 @@ public class CollegeItemFragment extends Fragment {
     private CollegeAdapter mAdapter;
     private ArrayList<College> collegeList, updateList, tempList, clickList;
 
-    private TextView mTextView;
+    private TextView mColNameView;
+    private TextView mRankView;
+    private TextView mTotAdmitView;
    
     public CollegeItemFragment() { }
 
@@ -59,7 +61,9 @@ public class CollegeItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.collegeitemlayout, container, false);
 
-        mTextView = (TextView) mRootView.findViewById(R.id.collegeitem);
+        mColNameView = (TextView) mRootView.findViewById(R.id.collegeitem);
+        mRankView = (TextView) mRootView.findViewById(R.id.rankstats);
+        mTotAdmitView = (TextView) mRootView.findViewById(R.id.totadmitstats);
 
         collegeList = new ArrayList<>();
         updateList = new ArrayList<>();
@@ -69,7 +73,10 @@ public class CollegeItemFragment extends Fragment {
     }
 
     public void receiveCol(College c){
-        mTextView.setText(c.getName());
+        mColNameView.setText(c.getName());
+        mRankView.setText("Rank: " + c.getRank());
+        mTotAdmitView.setText("Total Admission Rate: " + c.getAdmitTot());
+
     }
 
     public interface CollegeItemInterface{

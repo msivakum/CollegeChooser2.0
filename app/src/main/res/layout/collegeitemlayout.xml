@@ -7,7 +7,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="40dp"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
         android:id="@+id/collegeitem" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/rankstats"
+        android:layout_below="@+id/collegeitem"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/totadmitstats"
+        android:layout_below="@+id/rankstats"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

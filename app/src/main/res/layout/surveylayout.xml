@@ -2,27 +2,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <EditText
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/edittext1"
-        android:layout_centerHorizontal="true"
-        android:hint="Rank" />
-
-    <EditText
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/edittext2"
-        android:layout_below="@+id/edittext1"
-        android:layout_centerHorizontal="true"
-        android:hint="Admit Rate" />
-
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edittext2"
         android:layout_centerHorizontal="true"
+        android:id="@+id/titletext"
+        android:text="SURVEY"
+        android:textSize="25dp"
+        android:textColor="@color/black"/>
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_below="@+id/titletext"
+        android:id="@+id/linearlayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ranked ___ or below:"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:id="@+id/rankmenu"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="With a total admission rate ___ or lower:"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:id="@+id/totratemenu"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="535dp"
+        android:background="@color/green"
+        android:textSize="17dp"
         android:id="@+id/button1"
-        android:text="submit"/>
+        android:text="submit" />
 
 </RelativeLayout>

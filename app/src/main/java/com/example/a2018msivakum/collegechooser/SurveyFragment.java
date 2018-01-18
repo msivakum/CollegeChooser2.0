@@ -5,13 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -19,14 +23,20 @@ import android.widget.Toast;
  * Created by 2018msivakum on 10/24/2017.
  */
 
-public class SurveyFragment extends Fragment implements View.OnClickListener{
+public class SurveyFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
     private View mRootView;
     private SurveyFragmentInterface mCallback;
     private Button mButton;
     private EditText mEditTextRank;
     private EditText mEditTextTotAdmit;
+    private Spinner mSpinnerRank, mSpinnerTotRate;
     private College col;
+    private Integer mInt;
+
+    private Integer[] mArray;
+
+    private String[] ranks, totrates;
 
     private String TAG = "SURVEYFRAG";
 
@@ -34,21 +44,13 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
 
     public static SurveyFragment newInstance() {
         SurveyFragment fragment1 = new SurveyFragment();
-
         return fragment1;
     }
-
-    public String getRankData(){
-        return mEditTextRank.getText().toString();
-    }
-    public String getTotAdmitData(){
-        return mEditTextTotAdmit.getText().toString();
-    }
     
-    public College getCollege(){
+    public College getCollege(Integer[] a){
         Log.i(TAG, "getCollege called");
-        col.setRank(mEditTextRank.getText().toString());
-        col.setAdmitTot(mEditTextTotAdmit.getText().toString());
+        col.setRank(a[0].toString());
+        col.setAdmitTot(a[1].toString());
         return col;
     }
 
@@ -61,7 +63,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
         try {
             mCallback = (SurveyFragmentInterface) context;
             if (this.getUserVisibleHint()) {
-                // NOTIFY ACTIVITY THAT THIS IS THE ACTIVE FRAGMENT
+                //NOTIFY ACTIVITY THAT THIS IS THE ACTIVE FRAGMENT
                 mCallback.setSurveyFragmentActive();
             }
 
@@ -74,8 +76,22 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.surveylayout, container, false);
-        mEditTextRank = (EditText) mRootView.findViewById(R.id.edittext1);
-        mEditTextTotAdmit = (EditText) mRootView.findViewById(R.id.edittext2);
+
+        mArray = new Integer[15];
+
+        mSpinnerRank = (Spinner) mRootView.findViewById(R.id.rankmenu);
+        mSpinnerRank.setOnItemSelectedListener(this);
+
+        ranks = new String[]{"10", "20", "30", "40", "50", "-1"};
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>((Context) mCallback, android.R.layout.simple_spinner_dropdown_item, ranks);
+        mSpinnerRank.setAdapter(adapter1);
+
+        mSpinnerTotRate = (Spinner) mRootView.findViewById(R.id.totratemenu);
+        mSpinnerTotRate.setOnItemSelectedListener(this);
+
+        totrates = new String[]{"5", "10", "15", "20", "25", "30", "40", "50", "100", "-1"};
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>((Context) mCallback, android.R.layout.simple_spinner_dropdown_item, totrates);
+        mSpinnerTotRate.setAdapter(adapter2);
 
         mButton = (Button) mRootView.findViewById(R.id.button1);
         mButton.setOnClickListener(this);
@@ -88,8 +104,30 @@ public class SurveyFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         Log.i(TAG, "onClick called");
-        mCallback.passData(getCollege());
+        mCallback.passData(getCollege(mArray));
         mCallback.switchToSecondFrag();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        Log.i(TAG, "onItemSelected is called" + adapterView.getId());
+        switch (adapterView.getId()) {
+            case R.id.rankmenu:
+                mArray[0] = Integer.parseInt(ranks[i]);
+                Log.i(TAG, "rank selected = " + ranks[i]);
+                break;
+            case R.id.totratemenu:
+                mArray[1] = Integer.parseInt(totrates[i]);
+                Log.i(TAG, "tot rate selected = " + totrates[i]);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
     public interface SurveyFragmentInterface {
