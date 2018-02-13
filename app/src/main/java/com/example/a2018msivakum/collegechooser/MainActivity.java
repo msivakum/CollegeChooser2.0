@@ -1,5 +1,8 @@
 package com.example.a2018msivakum.collegechooser;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -24,12 +27,21 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, SurveyFragment.SurveyFragmentInterface, DisplayFragment.DisplayFragmentInterface, CollegeItemFragment.CollegeItemInterface, CollegeAdapter.CAInterface{
 //https://www.androidhive.info/2016/01/android-working-with-recycler-view/
@@ -47,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private College mCollege;
     private int mInd;
+
+    private Filesaver fileSaver;
+    private String INTERNAL_STORAGE_FILE = "storage.txt";
+    private Gson gson;
 
     private Fragment mActiveFragment;
     private String TAG = "MAINACTIVITY";
@@ -82,6 +98,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateList = new ArrayList<>();
 
         readData();
+
+        if(readInternalFile() != null && mActiveFragment == surveyFrag) {
+            Toast.makeText(getApplicationContext(), "Sorting criteria taken from previous submission", Toast.LENGTH_LONG).show();
+        }
+
+        gson = new GsonBuilder().create();
+
+        String s = readInternalFile();
+        fileSaver = gson.fromJson(s, Filesaver.class);
+        if(fileSaver == null) {
+            Log.i(TAG, "fileSaver is null");
+            fileSaver = new Filesaver();
+        }
+        else {
+            Log.i(TAG, "fileSaver is NOT null");
+            Log.i(TAG, fileSaver.getFile().getName());
+        }
     }
 
     @Override
@@ -120,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //------------------------------------------//
+
     public void readData() {
         InputStream is = getResources().openRawResource(R.raw.collegedata);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -130,23 +165,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String[] items = line.split(",");
 
                 College colleges = new College();
-                colleges.setId(items[0]);
-                colleges.setName(items[1]);
-                colleges.setInPrice(items[2]);
-                colleges.setOutPrice(items[3]);
-                colleges.setAdmitTot(items[4]);
-                colleges.setAdmitMen(items[5]);
-                colleges.setAdmitWomen(items[6]);
-                colleges.setEnrolled(items[7]);
-                colleges.setSatRead25(items[8]);
+                colleges.setId(items[0]); //---
+                colleges.setName(items[1]); //---
+                colleges.setInPrice(items[2]); //---
+                colleges.setOutPrice(items[3]); //sorted
+                colleges.setAdmitTot(items[4]); //sorted
+                colleges.setAdmitMen(items[5]); //---
+                colleges.setAdmitWomen(items[6]); //---
+                colleges.setEnrolled(items[7]); //sorted
+                colleges.setSatRead25(items[8]); //---
                 colleges.setSatRead75(items[9]);
-                colleges.setSatMath25(items[10]);
+                colleges.setSatMath25(items[10]); //---
                 colleges.setSatMath75(items[11]);
-                colleges.setSatWrit25(items[12]);
+                colleges.setSatWrit25(items[12]); //---
                 colleges.setSatWrit75(items[13]);
-                colleges.setAct25(items[14]);
+                colleges.setAct25(items[14]); //---
                 colleges.setAct75(items[15]);
-                colleges.setRank(items[16]);
+                colleges.setRank(items[16]); //sorted
                 collegeList.add(colleges);
             }
         } catch (IOException err) {
@@ -157,22 +192,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i(TAG, "Number of Colleges " + collegeList.size());
     }
 
-    @Override
-    public void switchToThirdFrag(int i) {
-        mViewPager.setCurrentItem(2, true);
-        citemFrag.receiveCol(updateList.get(i));
-        mInd = 2;
-    }
+    //------------------------------------------//
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -183,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public Fragment getItem(int position) {
             switch (position) {
                 case 0 :
-                    surveyFrag = SurveyFragment.newInstance();
+                    surveyFrag = SurveyFragment.newInstance(fileSaver);
                     return surveyFrag;
                 case 1 :
                     displayFrag = DisplayFragment.newInstance();;
@@ -216,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    //------------------------------------------//
 
     @Override
     public void setSurveyFragmentActive() {
@@ -236,15 +257,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mInd = 2;
     }
 
+    //------------------------------------------//
+
     @Override
     public void passData(College col){
         Log.i(TAG, "passData is called");
 
-        Log.i(TAG, "sort numbers are: " + col.getRank() + ", " + col.getAdmitTot() + " and " + col.getEnrolled());
+        Log.i(TAG, "sort numbers are: " + col.getRank() + ", " + col.getAdmitTot() + ", " + col.getEnrolled() + ", " + col.getOutPrice());
 
         sortRank(Integer.parseInt(col.getRank()) + 1);
         sortTotAdmitRate(Integer.parseInt(col.getAdmitTot()));
         sortEnrollment(Integer.parseInt(col.getEnrolled()));
+        sortOutPrice(Integer.parseInt(col.getOutPrice()));
+        if(col.getSatRead75() != null) {
+            sortSATRead(Integer.parseInt(col.getSatRead75()));
+            sortSATMath(Integer.parseInt(col.getSatMath75()));
+            sortSATWrite(Integer.parseInt(col.getSatWrit75()));
+        }
+        else if(col.getAct75() != null)
+            sortACTComp(Integer.parseInt(col.getAct75()));
 
         displayFrag.getRV().setAdapter(new CollegeAdapter(updateList));
 
@@ -255,6 +286,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateList = new ArrayList<>();
         tempList = collegeList;
     }
+
+    //---------------SORTING METHODS---------------//
 
     public void sortRank(int a){
         Log.i(TAG, "sortRank is called");
@@ -289,17 +322,77 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i(TAG, "NEWupdateList has: " + updateList.size());
     }
 
+    public void sortOutPrice(int a){
+        Log.i(TAG, "sortOutPrice is called");
+        for(int k = tempList.size()-1; k >= 0; k--) {
+            if(Integer.parseInt(tempList.get(k).getOutPrice()) > a || Integer.parseInt(tempList.get(k).getOutPrice()) == -1){
+                updateList.remove(tempList.get(k));
+            }
+        }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
+    }
+
+    public void sortSATRead(int a){
+        Log.i(TAG, "sortSATRead is called");
+        for(int k = tempList.size()-1; k >= 0; k--) {
+            if(Integer.parseInt(tempList.get(k).getSatRead75()) > a || Integer.parseInt(tempList.get(k).getSatRead75()) == -1){
+                updateList.remove(tempList.get(k));
+            }
+        }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
+    }
+
+    public void sortSATMath(int a) {
+        Log.i(TAG, "sortSATMath is called");
+        for (int k = tempList.size() - 1; k >= 0; k--) {
+            if (Integer.parseInt(tempList.get(k).getSatMath75()) > a || Integer.parseInt(tempList.get(k).getSatMath75()) == -1) {
+                updateList.remove(tempList.get(k));
+            }
+        }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
+    }
+
+    public void sortSATWrite(int a) {
+        Log.i(TAG, "sortSATWrite is called");
+        for (int k = tempList.size() - 1; k >= 0; k--) {
+            if (Integer.parseInt(tempList.get(k).getSatWrit75()) > a || Integer.parseInt(tempList.get(k).getSatWrit75()) == -1) {
+                updateList.remove(tempList.get(k));
+            }
+        }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
+    }
+
+    public void sortACTComp(int a) {
+        Log.i(TAG, "sortACTComp is called");
+        for (int k = tempList.size() - 1; k >= 0; k--) {
+            if (Integer.parseInt(tempList.get(k).getAct75()) > a || Integer.parseInt(tempList.get(k).getAct75()) == -1) {
+                updateList.remove(tempList.get(k));
+            }
+        }
+        tempList = updateList;
+        Log.i(TAG, "NEWupdateList has: " + updateList.size());
+    }
+
+    //------------------------------------------//
+
     @Override
     public void switchToSecondFrag(){
         mViewPager.setCurrentItem(1, true);
         mInd = 1;
     }
 
-    /*@Override
-    public void switchToThirdFrag(){
+    @Override
+    public void switchToThirdFrag(int i) {
         mViewPager.setCurrentItem(2, true);
+        citemFrag.receiveCol(updateList.get(i));
         mInd = 2;
-    }*/
+    }
+
+    //------------------------------------------//
 
     @Override
     public void setCol(College c){
@@ -310,5 +403,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public ViewPager getVP(){
         return mViewPager;
+    }
+
+    //------------------------------------------//
+
+    @Override
+    public String readInternalFile() {
+        Context context = getApplicationContext();
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        try {
+            FileInputStream fis;
+            fis = context.openFileInput(INTERNAL_STORAGE_FILE);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            Log.i("MAINACT", result.toString());
+            return result.toString("UTF-8");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void writeInternalFile(Filesaver s) {
+        String str = gson.toJson(s);
+        Context context = getApplicationContext();
+        try {
+            FileOutputStream fos;
+            fos = context.openFileOutput(INTERNAL_STORAGE_FILE, Context.MODE_PRIVATE);
+            fos.write(str.getBytes());
+            fos.close();
+            Log.i("MAINACT2", s.getFile().getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

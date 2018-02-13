@@ -87,6 +87,6 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
     }
 
     public interface CAInterface {
-        public void switchToThirdFrag(int i);
+        void switchToThirdFrag(int i);
     }
 }

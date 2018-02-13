@@ -28,7 +28,7 @@ public class CollegeItemFragment extends Fragment {
     private CollegeAdapter mAdapter;
     private ArrayList<College> collegeList, updateList, tempList, clickList;
 
-    private TextView mColNameView, mRankView, mTotAdmitView, mEnrollView;
+    private TextView mColNameView, mRankView, mTotAdmitView, mEnrollView, mOutPriceView, mInPriceView, mMenAdmitView, mWomenAdmitView, mSATRead25View, mSATRead75View, mSATMath25View, mSATMath75View, mSATWrite25View, mSATWrite75View, mACTComp25View, mACTComp75View;
    
     public CollegeItemFragment() { }
 
@@ -62,7 +62,20 @@ public class CollegeItemFragment extends Fragment {
         mColNameView = (TextView) mRootView.findViewById(R.id.collegeitem);
         mRankView = (TextView) mRootView.findViewById(R.id.rankstats);
         mTotAdmitView = (TextView) mRootView.findViewById(R.id.totadmitstats);
+        mMenAdmitView = (TextView) mRootView.findViewById(R.id.menadmitstats);
+        mWomenAdmitView = (TextView) mRootView.findViewById(R.id.womenadmitstats);
         mEnrollView = (TextView) mRootView.findViewById(R.id.enrollstats);
+        mOutPriceView = (TextView) mRootView.findViewById(R.id.outpricestats);
+        mInPriceView = (TextView) mRootView.findViewById(R.id.inpricestats);
+
+        mSATRead25View = (TextView) mRootView.findViewById(R.id.satread25);
+        mSATRead75View = (TextView) mRootView.findViewById(R.id.satread75);
+        mSATMath25View = (TextView) mRootView.findViewById(R.id.satmath25);
+        mSATMath75View = (TextView) mRootView.findViewById(R.id.satmath75);
+        mSATWrite25View = (TextView) mRootView.findViewById(R.id.satwrite25);
+        mSATWrite75View = (TextView) mRootView.findViewById(R.id.satwrite75);
+        mACTComp25View = (TextView) mRootView.findViewById(R.id.actcomp25);
+        mACTComp75View = (TextView) mRootView.findViewById(R.id.actcomp75);
 
         collegeList = new ArrayList<>();
         updateList = new ArrayList<>();
@@ -75,8 +88,23 @@ public class CollegeItemFragment extends Fragment {
         mColNameView.setText(c.getName());
         mRankView.setText("Rank: #" + c.getRank());
         mTotAdmitView.setText("Total Admission Rate: " + c.getAdmitTot() + "%");
+        mMenAdmitView.setText("Admission Rate (Men): " + c.getAdmitMen() + "%");
+        mWomenAdmitView.setText("Admission Rate (Women): " + c.getAdmitWomen() + "%");
         mEnrollView.setText("Size: " + c.getEnrolled() + " students");
+        mOutPriceView.setText("Out of State Tuition: $" +  c.getOutPrice());
+        mInPriceView.setText("In-State Tuition: $" +  c.getInPrice());
 
+        mSATRead25View.setText("SAT Reading 25th Percentile: " + c.getSatRead25());
+        mSATRead75View.setText("            75th Percentile: " + c.getSatRead75());
+
+        mSATMath25View.setText("SAT Math 25th Percentile: " + c.getSatMath25());
+        mSATMath75View.setText("         75th Percentile: " + c.getSatMath75());
+
+        mSATWrite25View.setText("SAT Writing 25th Percentile: " + c.getSatWrit25());
+        mSATWrite75View.setText("            75th Percentile: " + c.getSatWrit75());
+
+        mACTComp25View.setText("ACT Comp. 25th Percentile: " + c.getAct25());
+        mACTComp75View.setText("          75th Percentile: " + c.getAct75());
     }
 
     public interface CollegeItemInterface{
