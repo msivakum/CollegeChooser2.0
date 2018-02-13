@@ -76,6 +76,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         col.setName("Current Sort College");
 
         mfs.setFile(col);
+        mfs.setArray(a);
         mCallback.writeInternalFile(mfs);
         return col;
     }
@@ -146,6 +147,21 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
 
         col = new College();
 
+        if(mCallback.readInternalFile() != null){
+            mSpinnerRank.setSelection(getIndex(mSpinnerRank, mfs.getArray()[0] + ""));
+            mSpinnerTotRate.setSelection(getIndex(mSpinnerTotRate, mfs.getArray()[1] + ""));
+            mSpinnerEnroll.setSelection(getIndex(mSpinnerEnroll, mfs.getArray()[2] + ""));
+            mSpinnerOutPrice.setSelection(getIndex(mSpinnerOutPrice, mfs.getArray()[3] + ""));
+            if(!mSATread.getText().toString().equals("")) {
+                mSATread.setText(mfs.getArray()[4] + "");
+                mSATmath.setText(mfs.getArray()[5] + "");
+                mSATwrite.setText(mfs.getArray()[6] + "");
+            }
+            if(!mACTcomp.getText().toString().equals("")){
+                mACTcomp.setText(mfs.getArray()[7] + "");
+            }
+        }
+
         return mRootView;
     }
 
@@ -172,7 +188,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         //fix this to take care of not changing Json file after initial save. Maybe display the saved numbers in the Spinners and EditTexts so that mArray mirrors Json
 
 
-        if(mCallback.readInternalFile() != null) {
+        if(mCallback.readInternalFile() != null && mArray == mfs.getArray()) {
             Log.i(TAG, "criteria taken from previous run");
             mCallback.passData(mfs.getFile());
         }
@@ -216,7 +232,7 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
         int index = 0;
 
         for(int k = 0; k < spinner.getCount(); k++){
-            if(spinner.getItemAtPosition(k).equals(str)) {
+            if(spinner.getItemAtPosition(k).equals(str)){
                 index = k;
                 break;
             }

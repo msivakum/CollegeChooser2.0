@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void passData(College col){
         Log.i(TAG, "passData is called");
 
-        Log.i(TAG, "sort numbers are: " + col.getRank() + ", " + col.getAdmitTot() + ", " + col.getEnrolled() + ", " + col.getOutPrice());
+        Log.i(TAG, "sort numbers are: " + col);
 
         sortRank(Integer.parseInt(col.getRank()) + 1);
         sortTotAdmitRate(Integer.parseInt(col.getAdmitTot()));

@@ -75,7 +75,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose one of the following. Leave the other blank."
+            android:text="Choose one (SAT or ACT) of the following. Leave the other blank."
             android:textSize="10dp"
             android:layout_marginTop="10dp" />
 
