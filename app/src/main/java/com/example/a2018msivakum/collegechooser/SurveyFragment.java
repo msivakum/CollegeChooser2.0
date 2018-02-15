@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -152,13 +153,13 @@ public class SurveyFragment extends Fragment implements View.OnClickListener, Ad
             mSpinnerTotRate.setSelection(getIndex(mSpinnerTotRate, mfs.getArray()[1] + ""));
             mSpinnerEnroll.setSelection(getIndex(mSpinnerEnroll, mfs.getArray()[2] + ""));
             mSpinnerOutPrice.setSelection(getIndex(mSpinnerOutPrice, mfs.getArray()[3] + ""));
-            if(!mSATread.getText().toString().equals("")) {
-                mSATread.setText(mfs.getArray()[4] + "");
-                mSATmath.setText(mfs.getArray()[5] + "");
-                mSATwrite.setText(mfs.getArray()[6] + "");
+            if(mfs.getArray()[4] != null) {
+                mSATread.setText(mfs.getArray()[4] + "", TextView.BufferType.EDITABLE);
+                mSATmath.setText(mfs.getArray()[5] + "", TextView.BufferType.EDITABLE);
+                mSATwrite.setText(mfs.getArray()[6] + "", TextView.BufferType.EDITABLE);
             }
-            if(!mACTcomp.getText().toString().equals("")){
-                mACTcomp.setText(mfs.getArray()[7] + "");
+            if(mfs.getArray()[7] != null){
+                mACTcomp.setText(mfs.getArray()[7] + "", TextView.BufferType.EDITABLE);
             }
         }
 
