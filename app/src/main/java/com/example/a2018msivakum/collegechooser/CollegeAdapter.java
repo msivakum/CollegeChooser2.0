@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,32 +20,27 @@ import java.util.Locale;
 
 public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHolder>{
 
-    private List<College> mColleges;
+    private List<College> mColleges, mFavorites;
     private Context mContext;
-    private College mColInst;
+    private College mColInst, col;
 
     private CAInterface mCallback;
 
     public class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener*/{
 
-        public TextView nameTextView;;
+        public TextView nameTextView;
+        public CheckBox favorite;
 
         public ViewHolder(View view) {
             super(view);
-            //view.setOnClickListener(this);
             nameTextView = (TextView) view.findViewById(R.id.collegename);
+            favorite = (CheckBox) view.findViewById(R.id.star);
         }
-
-        /*@Override
-        public void onClick(View view) {
-            Toast.makeText(view.getContext(), getPosition() + ": " + mColleges.get(getPosition()).getName(), Toast.LENGTH_SHORT).show();
-            mColInst = mColleges.get(getPosition());
-        }*/
     }
 
     public CollegeAdapter(List<College> listcolleges) {
         mColleges = listcolleges;
-        //mContext = context;
+        mFavorites = new ArrayList<College>();
     }
 
 
@@ -63,9 +60,9 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(CollegeAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final CollegeAdapter.ViewHolder viewHolder, final int position) {
         // Get the data model based on position
-        College col = mColleges.get(position);
+        col = mColleges.get(position);
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;
@@ -74,8 +71,24 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("asdf","here");
+                Log.i("COLLEGEADAPT", position + " else");
                 mCallback.switchToThirdFrag(position);
+            }
+        });
+
+        viewHolder.favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox) view).isChecked()) {
+                    Log.i("COLLEGEADAPT", position + " favorited");
+                    mFavorites.add(mColleges.get(position));
+                    Log.i("COLLEGEADAPT", mFavorites.get(mFavorites.size()-1).getName() + "");
+                }
+                else {
+                    Log.i("COLLEGEADAPT", position + " removed from favorites");
+                    mFavorites.remove(mColleges.get(position));
+                    Log.i("COLLEGEADAPT", mFavorites.get(mFavorites.size()-1).getName() + "");
+                }
             }
         });
     }
@@ -84,6 +97,10 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mColleges.size();
+    }
+
+    public List<College> getFavorites(){
+        return mFavorites;
     }
 
     public interface CAInterface {
