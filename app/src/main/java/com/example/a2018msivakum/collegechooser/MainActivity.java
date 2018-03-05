@@ -257,6 +257,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mInd = 2;
     }
 
+    public SurveyFragment getSurveyFrag(){
+        return surveyFrag;
+    }
+
     //------------------------------------------//
 
     @Override

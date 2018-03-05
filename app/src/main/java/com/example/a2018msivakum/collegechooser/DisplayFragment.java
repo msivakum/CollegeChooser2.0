@@ -40,12 +40,13 @@ public class DisplayFragment extends Fragment {
     private DisplayFragment.DisplayFragmentInterface mCallback;
     private CollegeAdapter mAdapter;
     private ArrayList<College> collegeList, updateList, tempList, clickList;
+    private Filesaver mFilesaver;
 
     private College mCollege;
 
     private Integer mCount = 1;
 
-    public DisplayFragment() { }
+    public DisplayFragment() {}
 
     public static DisplayFragment newInstance() {
         DisplayFragment fragment2 = new DisplayFragment();
@@ -74,15 +75,15 @@ public class DisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.recyclerlayout, container, false);
 
+        
+
         collegeList = new ArrayList<>();
         updateList = new ArrayList<>();
         tempList = new ArrayList<>();
 
-        //readData();
-
         rvColleges = (RecyclerView) mRootView.findViewById(R.id.collegerv);
-        rvColleges.setAdapter(new CollegeAdapter(updateList));
-//        rvColleges.addOnItemTouchListener(this);
+        CollegeAdapter newAdapt = new CollegeAdapter(updateList);
+        rvColleges.setAdapter(newAdapt);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager((Context) mCallback, LinearLayoutManager.VERTICAL, false);
         layoutManager.scrollToPosition(0);
@@ -90,6 +91,11 @@ public class DisplayFragment extends Fragment {
 
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
+
+        mFilesaver = ((MainActivity) mCallback).getSurveyFrag().getFS();
+        mFilesaver.setList(newAdapt.getFavorites());
+
+        Log.i(TAG, mFilesaver.getList() + "");
 
         return mRootView;
     }
