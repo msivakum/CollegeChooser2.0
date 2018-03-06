@@ -94,6 +94,8 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                 Log.i("COLLEGEADAPT", ((MainActivity) mCallback).getFavorites() + "");
             }
         });
+
+
     }
 
     // Returns the total count of items in the list
@@ -101,6 +103,8 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
     public int getItemCount() {
         return mColleges.size();
     }
+
+
 
     public interface CAInterface {
         void switchToThirdFrag(int i);
