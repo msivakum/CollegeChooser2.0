@@ -32,6 +32,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    private ArrayList<College> collegeList, updateList, tempList;
+    private ArrayList<College> collegeList, updateList, tempList, mFavorites;
 
     private ViewPager mViewPager;
     private Button mButton;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         collegeList = new ArrayList<>();
         tempList = new ArrayList<>();
         updateList = new ArrayList<>();
+        mFavorites = new ArrayList<>();
 
         readData();
 
@@ -259,6 +261,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public SurveyFragment getSurveyFrag(){
         return surveyFrag;
+    }
+
+    public void addToFaves(College c){
+        mFavorites.add(c);
+
+        fileSaver.setList(mFavorites);
+        writeInternalFile(fileSaver);
+    }
+
+    public void removeFromFaves(College c){
+        mFavorites.remove(c);
+
+        fileSaver.setList(mFavorites);
+        writeInternalFile(fileSaver);
+    }
+
+    public ArrayList<College> getFavorites(){
+        return mFavorites;
+    }
+
+    public Filesaver getFileSaver(){
+        return fileSaver;
     }
 
     //------------------------------------------//

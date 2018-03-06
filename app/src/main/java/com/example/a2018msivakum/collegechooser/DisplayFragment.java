@@ -40,7 +40,7 @@ public class DisplayFragment extends Fragment {
     private DisplayFragment.DisplayFragmentInterface mCallback;
     private CollegeAdapter mAdapter;
     private ArrayList<College> collegeList, updateList, tempList, clickList;
-    private Filesaver mFilesaver;
+
 
     private College mCollege;
 
@@ -75,8 +75,6 @@ public class DisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.recyclerlayout, container, false);
 
-        
-
         collegeList = new ArrayList<>();
         updateList = new ArrayList<>();
         tempList = new ArrayList<>();
@@ -92,10 +90,7 @@ public class DisplayFragment extends Fragment {
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration((Context) mCallback, DividerItemDecoration.VERTICAL);
         rvColleges.addItemDecoration(itemDecoration);
 
-        mFilesaver = ((MainActivity) mCallback).getSurveyFrag().getFS();
-        mFilesaver.setList(newAdapt.getFavorites());
-
-        Log.i(TAG, mFilesaver.getList() + "");
+        Log.i(TAG, ((MainActivity) mCallback).getFileSaver().getList() + "");
 
         return mRootView;
     }

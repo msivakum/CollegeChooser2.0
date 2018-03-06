@@ -23,6 +23,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
     private List<College> mColleges, mFavorites;
     private Context mContext;
     private College mColInst, col;
+    private Filesaver mFilesaver;
 
     private CAInterface mCallback;
 
@@ -40,7 +41,6 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
 
     public CollegeAdapter(List<College> listcolleges) {
         mColleges = listcolleges;
-        mFavorites = new ArrayList<College>();
     }
 
 
@@ -68,6 +68,8 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
         TextView textView = viewHolder.nameTextView;
         textView.setText(col.getName());
 
+        mFavorites = ((MainActivity) mCallback).getFavorites();
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,14 +83,15 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
             public void onClick(View view) {
                 if(((CheckBox) view).isChecked()) {
                     Log.i("COLLEGEADAPT", position + " favorited");
-                    mFavorites.add(mColleges.get(position));
+                    ((MainActivity) mCallback).addToFaves(mColleges.get(position));
                     Log.i("COLLEGEADAPT", mFavorites.get(mFavorites.size()-1).getName() + "");
                 }
                 else {
                     Log.i("COLLEGEADAPT", position + " removed from favorites");
-                    mFavorites.remove(mColleges.get(position));
+                    ((MainActivity) mCallback).removeFromFaves(mColleges.get(position));
                     Log.i("COLLEGEADAPT", mFavorites.get(mFavorites.size()-1).getName() + "");
                 }
+                Log.i("COLLEGEADAPT", ((MainActivity) mCallback).getFavorites() + "");
             }
         });
     }
@@ -97,10 +100,6 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mColleges.size();
-    }
-
-    public List<College> getFavorites(){
-        return mFavorites;
     }
 
     public interface CAInterface {
